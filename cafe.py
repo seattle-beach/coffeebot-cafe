@@ -3,7 +3,10 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-devices = []
+EMPTY_POT_GRAMS = 1800
+FULL_POT_GRAMS = 3300
+
+devices = {}
 allStates = [
             {
                 "devId": "Homer",
@@ -44,7 +47,7 @@ def ping():
 def report():
     json_data = request.get_json(force=True)
     global devices
-    devices = json_data
+    devices[json_data["devId"]] = json_data["qty"]
     return "", 200
 
 @app.route('/allstates')
@@ -53,7 +56,18 @@ def allstates():
 
 @app.route('/status')
 def status():
-    return jsonify(devices)
+    devFormatted = []
+    for devId, qty in devices.items():
+        devLevel = (qty - EMPTY_POT_GRAMS)/(FULL_POT_GRAMS - EMPTY_POT_GRAMS)
+        devLevel = round(devLevel * 100, 0)
+        devLevel = min(max(devLevel, 0), 100)
+        devStatus = "AVAILABLE" if (devLevel > 0) else "UNAVAILABLE"
+        devFormatted.append({
+            "devId": devId,
+            "status": devStatus,
+            "level": devLevel
+        })
+    return jsonify(devFormatted)
 
 # run app
 if __name__ == "__main__":
