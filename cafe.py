@@ -59,7 +59,7 @@ def status():
     devFormatted = []
     for devId, qty in devices.items():
         devLevel = (qty - EMPTY_POT_GRAMS)/(FULL_POT_GRAMS - EMPTY_POT_GRAMS)
-        devLevel = round(devLevel * 100, 0)
+        devLevel = int(round(devLevel * 100, 0))
         devLevel = min(max(devLevel, 0), 100)
         devStatus = "AVAILABLE" if (devLevel > 0) else "UNAVAILABLE"
         devFormatted.append({
