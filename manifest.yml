@@ -1,0 +1,8 @@
+---
+applications:
+- name: cafe
+  memory: 512M
+  instances: 1
+  domain: cfapps.io
+  buildpack: python_buildpack
+  command: python cafe.py
