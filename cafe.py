@@ -55,6 +55,9 @@ def allstates():
 def raw():
     return jsonify(devices)
 
+def qty_to_cups(qty_grams):
+    return float(qty_grams/GRAMS_PER_CUP)
+
 def qty_to_percent(qty_grams):
     devLevel = (qty_grams - EMPTY_POT_GRAMS)/(FULL_POT_GRAMS - EMPTY_POT_GRAMS)
     devLevel = int(round(devLevel * 100, 0))
@@ -70,7 +73,8 @@ def status():
         devFormatted.append({
             "devId": devId,
             "status": devStatus,
-            "level": devLevel
+            "level": devLevel,
+            "cups": qty_to_cups(qty)
         })
     return jsonify(devFormatted)
 
@@ -81,10 +85,12 @@ if __name__ == "__main__":
         DEBUG = True
         EMPTY_POT_GRAMS = 1800
         FULL_POT_GRAMS = 3300
+        GRAMS_PER_CUP = 240
     else:                                       # running on CF
         PORT = int(os.getenv("PORT"))
         DEBUG = False
         EMPTY_POT_GRAMS = int(os.getenv("EMPTY_POT_GRAMS"))
         FULL_POT_GRAMS = int(os.getenv("FULL_POT_GRAMS"))
+        GRAMS_PER_CUP = int(os.getenv("GRAMS_PER_CUP"))
 
     app.run(host='0.0.0.0', port=PORT, debug=DEBUG)
