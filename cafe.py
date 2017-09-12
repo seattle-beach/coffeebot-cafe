@@ -58,7 +58,7 @@ def raw():
 def qty_to_cups(qty_grams):
     cups_per_pot = (FULL_POT_GRAMS - EMPTY_POT_GRAMS)/GRAMS_PER_CUP
     percent = qty_to_percent(qty_grams)
-    return float(percent*cups_per_pot)
+    return float((percent/100)*cups_per_pot)
 
 def qty_to_percent(qty_grams):
     devLevel = (qty_grams - EMPTY_POT_GRAMS)/(FULL_POT_GRAMS - EMPTY_POT_GRAMS)
